@@ -1901,16 +1901,14 @@
             var y = clampNum((e.clientY / Math.max(window.innerHeight, 1) - 0.5) * 2, -1, 1);
             headAim(x, y);
           }
-          hero.addEventListener("pointermove", function(e){
-            var r = hero.getBoundingClientRect();
-            tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-            ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+          /* 监听整页：右侧导航、顶部导航挡住时也能跟随 */
+          window.addEventListener("pointermove", function(e){
+            tx = clampNum((e.clientX / Math.max(window.innerWidth, 1) - 0.5) * 2, -1, 1);
+            ty = clampNum((e.clientY / Math.max(window.innerHeight, 1) - 0.5) * 2, -1, 1);
             kick(); aimHead(e);
           }, { passive: true });
-          hero.addEventListener("pointerleave", function(){
-            tx = 0; ty = 0; kick();
-            downMode = false; downAlphaTarget = 0;
-            headTarget = HEAD_FRONT;
+          window.addEventListener("blur", function(){
+            downMode = false; downAlphaTarget = 0; headTarget = HEAD_FRONT; kick();
           });
           setTimeout(function(){
             if (introDone) return;
